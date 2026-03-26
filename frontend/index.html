@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Global Su Mirasi Platformu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <style>
+      body {
+        background: radial-gradient(circle at 10% 10%, #1e3a8a 0%, transparent 30%),
+          radial-gradient(circle at 90% 20%, #155e75 0%, transparent 32%),
+          linear-gradient(140deg, #0b1022, #111827 40%, #1f2937);
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(14px);
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      }
+      .island {
+        transition: all 500ms ease;
+      }
+      .island-good {
+        background: linear-gradient(180deg, #14532d 0%, #166534 65%, #1f2937 100%);
+      }
+      .island-medium {
+        background: linear-gradient(180deg, #713f12 0%, #854d0e 60%, #1f2937 100%);
+      }
+      .island-bad {
+        background: linear-gradient(180deg, #7c2d12 0%, #9a3412 60%, #1f2937 100%);
+      }
+      .island-critical {
+        background: linear-gradient(180deg, #7f1d1d 0%, #991b1b 60%, #1f2937 100%);
+        filter: saturate(0.7);
+      }
+      #map {
+        min-height: 330px;
+        border-radius: 12px;
+      }
+      .toast-enter {
+        animation: toastIn 0.4s ease;
+      }
+      @keyframes toastIn {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+  </head>
+  <body class="text-slate-100 min-h-screen">
+    <div class="max-w-7xl mx-auto p-4 md:p-8 space-y-4">
+      <div class="glass rounded-2xl p-5 md:p-7">
+        <h1 class="text-2xl md:text-4xl font-bold">Global Su Mirasi Platformu</h1>
+        <p class="text-slate-300 mt-2">
+          Kalici ekosistem, tedarik zinciri riski, kelebek etkisi ve marka etkisini tek ekranda simule eder.
+        </p>
+      </div>
+
+      <div id="criticalZoneWarning" class="hidden glass rounded-xl p-4 border-red-400/60 bg-red-900/30">
+        <strong class="text-red-300">Kritik Bolge Uyarisi:</strong>
+        <span class="text-red-100">Su stresi yuksek bolge secildi. Kuruma etkisi 2x uygulaniyor.</span>
+      </div>
+
+      <div class="grid lg:grid-cols-3 gap-4">
+        <div class="lg:col-span-2 space-y-4">
+          <div class="glass rounded-2xl p-4">
+            <form id="searchForm" class="grid md:grid-cols-4 gap-3">
+              <input id="query" class="md:col-span-2 rounded-xl bg-black/25 border border-white/20 p-3 outline-none" placeholder='Orn: "1 kg dana eti", "kot pantolon"' />
+              <select id="zoneSelect" class="rounded-xl bg-black/25 border border-white/20 p-3"></select>
+              <button id="submitBtn" class="rounded-xl bg-cyan-500/70 hover:bg-cyan-500 transition p-3 font-semibold">Hesapla</button>
+            </form>
+          </div>
+
+          <div id="islandCard" class="glass rounded-2xl p-4">
+            <div class="flex justify-between items-center mb-3">
+              <h2 class="text-xl font-semibold">Kalici Ekosistem (Life Chronicle)</h2>
+              <span id="healthPill" class="px-3 py-1 rounded-full bg-emerald-500/30 border border-emerald-300/40">Saglik: %100</span>
+            </div>
+            <div id="island" class="island island-good rounded-xl h-48 p-4 flex items-end">
+              <div>
+                <p id="islandText" class="font-medium">Ada canli ve dengeli.</p>
+                <p id="islandSubText" class="text-sm text-slate-200/90">Tercihlerin kalici etki biriktirir.</p>
+              </div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-3 mt-3">
+              <div class="rounded-xl bg-white/5 p-3 border border-white/10">
+                Toplam Harcanan Su
+                <div id="spentCounter" class="text-xl font-bold mt-1">0 L</div>
+              </div>
+              <div class="rounded-xl bg-white/5 p-3 border border-white/10">
+                Toplam Kurtarilan Su
+                <div id="savedCounter" class="text-xl font-bold mt-1">0 L</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="glass rounded-2xl p-4">
+            <h2 class="text-xl font-semibold">Kuresel Etki Haritasi</h2>
+            <p id="impactText" class="text-slate-300 mt-1">Cevreci bir alternatif secince kelebek etkisi raporu burada gorunecek.</p>
+            <div class="grid md:grid-cols-[220px_1fr] gap-3 mt-3">
+              <div class="rounded-xl bg-black/20 border border-white/10 p-3">
+                <div class="font-semibold mb-2">Risk Skalasi</div>
+                <div class="space-y-2 text-sm">
+                  <div><span class="inline-block w-3 h-3 rounded-full bg-emerald-400 mr-2"></span>Iyi</div>
+                  <div><span class="inline-block w-3 h-3 rounded-full bg-yellow-300 mr-2"></span>Orta</div>
+                  <div><span class="inline-block w-3 h-3 rounded-full bg-orange-400 mr-2"></span>Kotu</div>
+                  <div><span class="inline-block w-3 h-3 rounded-full bg-red-500 mr-2"></span>Kritik</div>
+                </div>
+              </div>
+              <div id="map"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div id="result" class="glass rounded-2xl p-4 hidden"></div>
+          <div id="insight" class="glass rounded-2xl p-4"></div>
+          <div id="alternatives" class="glass rounded-2xl p-4"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toastArea" class="fixed right-4 bottom-4 z-50 space-y-2"></div>
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+    <script>
+      const STORAGE_KEY = "global-water-chronicle-v1";
+      const form = document.getElementById("searchForm");
+      const queryInput = document.getElementById("query");
+      const zoneSelect = document.getElementById("zoneSelect");
+      const submitBtn = document.getElementById("submitBtn");
+      const resultEl = document.getElementById("result");
+      const alternativesEl = document.getElementById("alternatives");
+      const insightEl = document.getElementById("insight");
+      const impactTextEl = document.getElementById("impactText");
+      const warningEl = document.getElementById("criticalZoneWarning");
+      const toastArea = document.getElementById("toastArea");
+      const islandEl = document.getElementById("island");
+      const islandTextEl = document.getElementById("islandText");
+      const islandSubTextEl = document.getElementById("islandSubText");
+      const healthPillEl = document.getElementById("healthPill");
+      const spentCounterEl = document.getElementById("spentCounter");
+      const savedCounterEl = document.getElementById("savedCounter");
+
+      let map = null;
+      let markerLayer = null;
+      let lastEffectiveLiters = null;
+      let chronicle = loadChronicle();
+      let zones = [];
+
+      function loadChronicle() {
+        try {
+          const raw = localStorage.getItem(STORAGE_KEY);
+          if (raw) return JSON.parse(raw);
+        } catch (e) {}
+        return { health: 100, spent: 0, saved: 0 };
+      }
+      function saveChronicle() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(chronicle));
+      }
+      function fmt(n) {
+        return new Intl.NumberFormat("tr-TR").format(Math.round(n));
+      }
+      function riskColor(risk) {
+        if (risk === "critical") return "#ef4444";
+        if (risk === "bad") return "#fb923c";
+        if (risk === "medium") return "#fde047";
+        return "#34d399";
+      }
+      function toast(message) {
+        const el = document.createElement("div");
+        el.className = "toast-enter glass rounded-xl px-4 py-3 max-w-sm";
+        el.innerHTML = `<div class="font-semibold">Dijital Kredi Bagisi</div><div class="text-sm text-slate-200 mt-1">${message}</div>`;
+        toastArea.appendChild(el);
+        setTimeout(() => el.remove(), 3200);
+      }
+
+      function applyIslandView() {
+        const h = chronicle.health;
+        islandEl.classList.remove("island-good", "island-medium", "island-bad", "island-critical");
+        let stage = "good";
+        if (h <= 20) stage = "critical";
+        else if (h <= 45) stage = "bad";
+        else if (h <= 70) stage = "medium";
+        islandEl.classList.add(`island-${stage}`);
+
+        const meta = {
+          good: ["Ada canli ve verimli.", "Yavas ama istikrarli bir iyilesme suruyor."],
+          medium: ["Ada kuruma sinirinda.", "Daha dusuk su ayak izli secimler adayi toparlar."],
+          bad: ["Ada belirgin sekilde coraklasiyor.", "Su tuketimi azaltilmazsa kritik seviyeye iner."],
+          critical: ["Ada kritik kuraklikta.", "Kalici hasari tersine cevirmek icin art arda cevre dostu secimler gerekli."]
+        }[stage];
+        islandTextEl.textContent = meta[0];
+        islandSubTextEl.textContent = meta[1];
+        healthPillEl.textContent = `Saglik: %${Math.max(0, Math.round(h))}`;
+        spentCounterEl.textContent = `${fmt(chronicle.spent)} L`;
+        savedCounterEl.textContent = `${fmt(chronicle.saved)} L`;
+      }
+
+      function initMap() {
+        if (map) return;
+        map = L.map("map", { worldCopyJump: true }).setView([20, 0], 2);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 7,
+          attribution: "&copy; OpenStreetMap"
+        }).addTo(map);
+        markerLayer = L.layerGroup().addTo(map);
+      }
+
+      function renderRegions(regions) {
+        initMap();
+        markerLayer.clearLayers();
+        const bounds = [];
+        (regions || []).forEach((r) => {
+          if (typeof r.lat !== "number" || typeof r.lng !== "number") return;
+          const c = riskColor(r.risk);
+          const m = L.circleMarker([r.lat, r.lng], {
+            radius: 8,
+            color: c,
+            fillColor: c,
+            fillOpacity: 0.8
+          });
+          m.bindPopup(`<strong>${r.name}</strong><br/>Risk: ${r.risk}`);
+          m.addTo(markerLayer);
+          bounds.push([r.lat, r.lng]);
+        });
+        if (bounds.length) map.fitBounds(bounds, { padding: [20, 20], maxZoom: 4 });
+      }
+
+      function updateChronicle(effectiveLiters, isAlternative) {
+        chronicle.spent += effectiveLiters;
+        const impact = Math.min(18, Math.max(1.5, effectiveLiters / 600));
+        if (isAlternative) {
+          chronicle.health = Math.min(100, chronicle.health + Math.max(1.2, impact * 0.35));
+        } else {
+          chronicle.health = Math.max(0, chronicle.health - impact);
+        }
+      }
+
+      async function loadZones() {
+        const res = await fetch("/api/production-zones");
+        const data = await res.json();
+        zones = data.zones || [];
+        zoneSelect.innerHTML = zones.map((z) => `<option value="${z.id}">${z.label}</option>`).join("");
+      }
+
+      function selectedZone() {
+        return zones.find((z) => z.id === zoneSelect.value) || zones[0] || { stress_multiplier: 1, stress_level: "low" };
+      }
+
+      function renderInsight(product) {
+        if (product.product_type === "clothing") {
+          const mats = (product.material_alternatives || []).join(", ") || "Alternatif yok";
+          insightEl.innerHTML = `
+            <h3 class="font-semibold text-lg">Materyal ve Alternatifler</h3>
+            <p class="text-slate-300 mt-2">Malzeme: ${product.material_info || "Bilgi yok"}</p>
+            <p class="text-slate-300 mt-2">Alternatif Malzemeler: ${mats}</p>
+          `;
+          return;
+        }
+        insightEl.innerHTML = `
+          <h3 class="font-semibold text-lg">Kalori ve Saglik Etkisi</h3>
+          <p class="text-slate-300 mt-2">Kalori: ${product.calories_per_unit ? fmt(product.calories_per_unit) + " kcal" : "-"}</p>
+          <p class="text-slate-300 mt-2">${product.health_note || "Saglik notu yok."}</p>
+        `;
+      }
+
+      function renderAlternatives(product, multiplier) {
+        const alts = product.alternatives || [];
+        if (!alts.length) {
+          alternativesEl.innerHTML = "<p class='text-slate-300'>Bu urun icin alternatif bulunamadi.</p>";
+          return;
+        }
+        alternativesEl.innerHTML = `
+          <h3 class="font-semibold text-lg">Dusuk Su Maliyetli Oneriler</h3>
+          <div class="space-y-2 mt-3">
+            ${alts.map((a) => `
+              <button data-alt="${a.name}" data-liters="${a.water_liters}" class="w-full text-left rounded-xl p-3 bg-white/5 border border-white/15 hover:bg-white/10 transition">
+                <div class="flex items-center justify-between gap-2">
+                  <div>
+                    <div class="font-medium">${a.name}</div>
+                    <div class="text-sm text-slate-300">${fmt(a.water_liters)} L</div>
+                  </div>
+                  <span class="text-xs px-2 py-1 rounded-full border border-emerald-300/50 bg-emerald-500/20">Sponsor Marka: DogaDostu</span>
+                </div>
+              </button>
+            `).join("")}
+          </div>
+        `;
+        alternativesEl.querySelectorAll("button[data-alt]").forEach((btn) => {
+          btn.addEventListener("click", async () => {
+            const altName = btn.dataset.alt;
+            const altL = Number(btn.dataset.liters || 0) * multiplier;
+            if (lastEffectiveLiters && lastEffectiveLiters > altL) {
+              const saved = lastEffectiveLiters - altL;
+              chronicle.saved += saved;
+              const impactRes = await fetch(`/api/impact-transfer?saved_liters=${encodeURIComponent(saved)}`);
+              const impact = await impactRes.json();
+              impactTextEl.textContent = `Tebrikler! Kurtardiginiz ${fmt(saved)} litre su, ${impact.region} bolgesine sanal olarak aktarildi. ${impact.message}`;
+            }
+            toast("Bu seciminiz sayesinde X nehrinin temizlenmesine 1 Dijital Kredi bagislandi.");
+            await runSearch(altName, true);
+          });
+        });
+      }
+
+      async function runSearch(query, isAlternative = false) {
+        submitBtn.disabled = true;
+        try {
+          const zone = selectedZone();
+          const multiplier = Number(zone.stress_multiplier || 1);
+          warningEl.classList.toggle("hidden", zone.stress_level !== "high");
+
+          const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+          const data = await res.json();
+          if (!res.ok) {
+            resultEl.classList.remove("hidden");
+            resultEl.innerHTML = `<div class="text-red-300">${data.message || "Urun bulunamadi."}</div>`;
+            return;
+          }
+
+          const effectiveLiters = data.water_liters * multiplier;
+          updateChronicle(effectiveLiters, isAlternative);
+          saveChronicle();
+          applyIslandView();
+          lastEffectiveLiters = effectiveLiters;
+
+          resultEl.classList.remove("hidden");
+          resultEl.innerHTML = `
+            <h3 class="text-xl font-semibold">${data.name}</h3>
+            <p class="text-slate-300 mt-1">Taban Su Ayak Izi: ${fmt(data.water_liters)} L</p>
+            <p class="text-slate-300">Bolge Carpani: x${multiplier.toFixed(1)} (${zone.label})</p>
+            <p class="text-cyan-300 font-semibold mt-1">Etkilesimli Maliyet: ${fmt(effectiveLiters)} L</p>
+          `;
+
+          renderInsight(data);
+          renderRegions(data.regions || []);
+          renderAlternatives(data, multiplier);
+        } catch (e) {
+          resultEl.classList.remove("hidden");
+          resultEl.innerHTML = "<div class='text-red-300'>Aglanti hatasi olustu.</div>";
+        } finally {
+          submitBtn.disabled = false;
+        }
+      }
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const q = queryInput.value.trim();
+        if (!q) return;
+        await runSearch(q, false);
+      });
+
+      (async function init() {
+        applyIslandView();
+        await loadZones();
+        initMap();
+      })();
+    </script>
+  </body>
+</html>

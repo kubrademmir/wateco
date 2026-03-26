@@ -1,0 +1,294 @@
+{
+  "products": [
+    {
+      "id": "coffee_cup",
+      "name": "1 fincan kahve",
+      "keywords": ["kahve", "coffee", "1 fincan kahve", "filtre kahve", "espresso"],
+      "water_liters": 140,
+      "unit": "serving",
+      "category": "içecek",
+      "alternatives": ["tea_cup"],
+      "product_type": "food",
+      "calories_per_unit": 2,
+      "health_note": "Şekersiz tüketildiğinde düşük kalorilidir. Aşırı kafein tüketimi uyku ve çarpıntı sorunlarına yol açabilir.",
+      "regions": [
+        {"name": "Brezilya", "lat": -14.2, "lng": -51.9, "risk": "bad"},
+        {"name": "Etiyopya", "lat": 9.1, "lng": 40.5, "risk": "medium"},
+        {"name": "Kolombiya", "lat": 4.6, "lng": -74.1, "risk": "medium"}
+      ]
+    },
+    {
+      "id": "tea_cup",
+      "name": "1 bardak çay",
+      "keywords": ["çay", "cay", "tea", "1 bardak çay"],
+      "water_liters": 30,
+      "unit": "serving",
+      "category": "içecek",
+      "alternatives": [],
+      "product_type": "food",
+      "calories_per_unit": 2,
+      "health_note": "Şekersiz çay antioksidan içerir. Fazla tüketimde kafein hassasiyeti oluşabilir.",
+      "regions": [
+        {"name": "Türkiye (Karadeniz)", "lat": 40.9, "lng": 38.7, "risk": "good"},
+        {"name": "Hindistan", "lat": 22.6, "lng": 88.4, "risk": "medium"}
+      ]
+    },
+    {
+      "id": "beef_1kg",
+      "name": "1 kg dana eti",
+      "keywords": ["dana eti", "sığır eti", "sigir eti", "beef", "et", "1 kg dana eti"],
+      "water_liters": 15000,
+      "unit": "kg",
+      "category": "gıda",
+      "alternatives": ["chicken_1kg", "lentils_1kg"],
+      "product_type": "food",
+      "calories_per_unit": 2500,
+      "health_note": "Protein açısından zengindir ancak doymuş yağ ve porsiyon kontrolü önemlidir.",
+      "regions": [
+        {"name": "Arjantin", "lat": -34.6, "lng": -58.4, "risk": "critical"},
+        {"name": "Brezilya", "lat": -15.8, "lng": -47.9, "risk": "critical"},
+        {"name": "ABD", "lat": 41.9, "lng": -87.6, "risk": "bad"}
+      ]
+    },
+    {
+      "id": "chicken_1kg",
+      "name": "1 kg tavuk",
+      "keywords": ["tavuk", "chicken", "1 kg tavuk", "tavuk eti"],
+      "water_liters": 4300,
+      "unit": "kg",
+      "category": "gıda",
+      "alternatives": ["lentils_1kg"],
+      "product_type": "food",
+      "calories_per_unit": 2390,
+      "health_note": "Yüksek protein sağlar. Derisiz ve dengeli tüketim daha sağlıklıdır.",
+      "regions": [
+        {"name": "Türkiye", "lat": 39.0, "lng": 35.2, "risk": "bad"},
+        {"name": "ABD", "lat": 39.7, "lng": -95.6, "risk": "bad"}
+      ]
+    },
+    {
+      "id": "lentils_1kg",
+      "name": "1 kg mercimek",
+      "keywords": ["mercimek", "lentil", "lentils", "1 kg mercimek"],
+      "water_liters": 2500,
+      "unit": "kg",
+      "category": "gıda",
+      "alternatives": [],
+      "product_type": "food",
+      "calories_per_unit": 1160,
+      "health_note": "Lif ve bitkisel protein açısından zengindir, kalp sağlığı için olumlu bir seçimdir.",
+      "regions": [
+        {"name": "Türkiye", "lat": 37.1, "lng": 37.4, "risk": "medium"},
+        {"name": "Kanada", "lat": 52.1, "lng": -106.7, "risk": "good"}
+      ]
+    },
+    {
+      "id": "jeans",
+      "name": "1 adet kot pantolon",
+      "keywords": ["kot", "kot pantolon", "jean", "jeans", "denim", "pantolon"],
+      "water_liters": 7600,
+      "unit": "piece",
+      "category": "giyim",
+      "alternatives": ["secondhand_clothing"],
+      "product_type": "clothing",
+      "material_info": "Genellikle pamuk (cotton) + elastan/poliester karışımı.",
+      "material_alternatives": ["Geri dönüştürülmüş pamuk", "Kenevir (hemp) karışımı kumaş", "Lyocell/Tencel"],
+      "regions": [
+        {"name": "Hindistan", "lat": 23.0, "lng": 78.9, "risk": "critical"},
+        {"name": "Pakistan", "lat": 30.4, "lng": 69.3, "risk": "critical"},
+        {"name": "Bangladeş", "lat": 23.7, "lng": 90.3, "risk": "bad"}
+      ]
+    },
+    {
+      "id": "secondhand_clothing",
+      "name": "İkinci el kıyafet (1 adet)",
+      "keywords": ["ikinci el", "second hand", "secondhand", "thrift", "2. el kıyafet"],
+      "water_liters": 50,
+      "unit": "piece",
+      "category": "giyim",
+      "alternatives": [],
+      "product_type": "clothing",
+      "material_info": "İkinci elde ürünün mevcut malzemesi yeniden kullanılır.",
+      "material_alternatives": ["İkinci el pamuklu ürün", "İkinci el yün ürün", "Tamir/yenileme"],
+      "regions": [
+        {"name": "Yerel ikinci el pazarı", "lat": 41.0, "lng": 29.0, "risk": "good"}
+      ]
+    },
+    {
+      "id": "rice_1kg",
+      "name": "1 kg pirinç",
+      "keywords": ["pirinç", "pirinc", "rice", "1 kg pirinç"],
+      "water_liters": 2500,
+      "unit": "kg",
+      "category": "gıda",
+      "alternatives": ["potato_1kg"],
+      "product_type": "food",
+      "calories_per_unit": 1300,
+      "health_note": "Karbonhidrat kaynağıdır. Lif için kepekli tahıllarla dengelemek faydalıdır.",
+      "regions": [
+        {"name": "Hindistan", "lat": 20.6, "lng": 78.9, "risk": "critical"},
+        {"name": "Tayland", "lat": 15.9, "lng": 100.9, "risk": "bad"}
+      ]
+    },
+    {
+      "id": "potato_1kg",
+      "name": "1 kg patates",
+      "keywords": ["patates", "potato", "1 kg patates"],
+      "water_liters": 290,
+      "unit": "kg",
+      "category": "gıda",
+      "alternatives": [],
+      "product_type": "food",
+      "calories_per_unit": 770,
+      "health_note": "Tokluk sağlar, C vitamini ve potasyum içerir.",
+      "regions": [
+        {"name": "Türkiye", "lat": 39.0, "lng": 35.2, "risk": "good"},
+        {"name": "Polonya", "lat": 52.2, "lng": 19.1, "risk": "good"}
+      ]
+    },
+    {
+      "id": "chocolate_100g",
+      "name": "100 g çikolata",
+      "keywords": ["çikolata", "cikolata", "chocolate", "100 g çikolata"],
+      "water_liters": 1700,
+      "unit": "100g",
+      "category": "gıda",
+      "alternatives": ["fruit_serving"],
+      "product_type": "food",
+      "calories_per_unit": 540,
+      "health_note": "Yüksek şeker ve yağ içerebilir. Ara sıra ve küçük porsiyonlarda daha uygundur.",
+      "regions": [
+        {"name": "Gana", "lat": 7.9, "lng": -1.0, "risk": "bad"},
+        {"name": "Fildişi Sahili", "lat": 7.5, "lng": -5.5, "risk": "bad"}
+      ]
+    },
+    {
+      "id": "fruit_serving",
+      "name": "1 porsiyon meyve",
+      "keywords": ["meyve", "fruit", "1 porsiyon meyve", "elma", "armut", "muz"],
+      "water_liters": 70,
+      "unit": "serving",
+      "category": "gıda",
+      "alternatives": [],
+      "product_type": "food",
+      "calories_per_unit": 80,
+      "health_note": "Vitamin ve lif açısından zengin, günlük tüketim için sağlıklı bir tercihtir.",
+      "regions": [
+        {"name": "Türkiye", "lat": 39.0, "lng": 35.2, "risk": "good"},
+        {"name": "İspanya", "lat": 40.4, "lng": -3.7, "risk": "good"}
+      ]
+    },
+    {
+      "id": "milk_1l",
+      "name": "1 litre süt",
+      "keywords": ["süt", "sut", "milk", "1 litre süt", "1l süt"],
+      "water_liters": 1000,
+      "unit": "liter",
+      "category": "içecek",
+      "alternatives": ["oat_milk_1l"],
+      "product_type": "food",
+      "calories_per_unit": 600,
+      "health_note": "Kalsiyum ve protein sağlar. Laktoz hassasiyeti olanlar için uygun olmayabilir.",
+      "regions": [
+        {"name": "AB", "lat": 48.8, "lng": 2.3, "risk": "bad"},
+        {"name": "Yeni Zelanda", "lat": -41.3, "lng": 174.8, "risk": "medium"}
+      ]
+    },
+    {
+      "id": "oat_milk_1l",
+      "name": "1 litre yulaf sütü",
+      "keywords": ["yulaf sütü", "yulaf sutu", "oat milk", "bitkisel süt", "1 litre yulaf sütü"],
+      "water_liters": 400,
+      "unit": "liter",
+      "category": "içecek",
+      "alternatives": [],
+      "product_type": "food",
+      "calories_per_unit": 450,
+      "health_note": "Laktozsuz alternatif olabilir. Bazı markalarda ilave şeker olabilir; etiket kontrol edilmelidir.",
+      "regions": [
+        {"name": "İsveç", "lat": 59.3, "lng": 18.0, "risk": "good"},
+        {"name": "Finlandiya", "lat": 60.2, "lng": 24.9, "risk": "good"}
+      ]
+    },
+    {
+      "id": "egg_1",
+      "name": "1 adet yumurta",
+      "keywords": ["yumurta", "egg", "1 yumurta", "1 adet yumurta"],
+      "water_liters": 200,
+      "unit": "piece",
+      "category": "gıda",
+      "alternatives": ["chickpeas_1kg"],
+      "product_type": "food",
+      "calories_per_unit": 70,
+      "health_note": "Yüksek biyoyararlanımlı protein içerir; dengeli beslenmede uygundur.",
+      "regions": [
+        {"name": "Türkiye", "lat": 39.0, "lng": 35.2, "risk": "medium"},
+        {"name": "ABD", "lat": 40.7, "lng": -89.4, "risk": "medium"}
+      ]
+    },
+    {
+      "id": "chickpeas_1kg",
+      "name": "1 kg nohut",
+      "keywords": ["nohut", "chickpea", "chickpeas", "1 kg nohut"],
+      "water_liters": 1800,
+      "unit": "kg",
+      "category": "gıda",
+      "alternatives": [],
+      "product_type": "food",
+      "calories_per_unit": 1640,
+      "health_note": "Bitkisel protein ve lif açısından zengindir, doygunluk sağlar.",
+      "regions": [
+        {"name": "Türkiye", "lat": 37.6, "lng": 34.6, "risk": "medium"},
+        {"name": "Meksika", "lat": 19.4, "lng": -99.1, "risk": "bad"}
+      ]
+    },
+    {
+      "id": "bread_1loaf",
+      "name": "1 somun ekmek",
+      "keywords": ["ekmek", "bread", "somun", "1 somun ekmek"],
+      "water_liters": 160,
+      "unit": "piece",
+      "category": "gıda",
+      "alternatives": [],
+      "product_type": "food",
+      "calories_per_unit": 250,
+      "health_note": "Tam tahıllı tercih edilirse lif alımı artar ve kan şekeri dengesi iyileşir.",
+      "regions": [
+        {"name": "Türkiye", "lat": 39.0, "lng": 35.2, "risk": "good"},
+        {"name": "Almanya", "lat": 52.5, "lng": 13.4, "risk": "good"}
+      ]
+    },
+    {
+      "id": "tomato_1kg",
+      "name": "1 kg domates",
+      "keywords": ["domates", "tomato", "1 kg domates"],
+      "water_liters": 180,
+      "unit": "kg",
+      "category": "gıda",
+      "alternatives": [],
+      "product_type": "food",
+      "calories_per_unit": 180,
+      "health_note": "Likopen içerir. Sebze tüketimi genel sağlık için olumlu etkilidir.",
+      "regions": [
+        {"name": "Türkiye", "lat": 36.9, "lng": 30.7, "risk": "good"},
+        {"name": "İspanya", "lat": 37.4, "lng": -5.9, "risk": "medium"}
+      ]
+    },
+    {
+      "id": "apple_1",
+      "name": "1 adet elma",
+      "keywords": ["elma", "apple", "1 elma", "1 adet elma"],
+      "water_liters": 70,
+      "unit": "piece",
+      "category": "gıda",
+      "alternatives": [],
+      "product_type": "food",
+      "calories_per_unit": 95,
+      "health_note": "Lif ve C vitamini içerir; ara öğün için iyi bir tercihtir.",
+      "regions": [
+        {"name": "Türkiye", "lat": 40.2, "lng": 29.1, "risk": "good"},
+        {"name": "Polonya", "lat": 51.1, "lng": 17.0, "risk": "good"}
+      ]
+    }
+  ]
+}
